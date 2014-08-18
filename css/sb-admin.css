@@ -198,7 +198,9 @@ body {
 .btn-danger.btn-outline:hover {
     color: #fff;
 }
-
+.chamber-node:hover{
+    color:#5CB85C;
+}
 /* Pages */
 
 /* ------------------------------- */
@@ -326,4 +328,10 @@ table.dataTable thead .sorting:after {
 
 .show-grid {
     margin: 15px 0;
+}
+.sortable-headers .header{
+    border: none !important;
+}
+.chamber-node{
+    cursor:pointer;
 }

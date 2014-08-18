@@ -18,31 +18,31 @@
             <span class="glyphicon glyphicon-circle-arrow-up pull-right"></span>
           </div>
           <div class="panel-body">
-            <table class="table table-striped"> 
+            <table class="table table-striped tablesorter">
+              <thead>
+                <tr class = "sortable">
+                  <th>Name&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
+                  <th>Date&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
+                </tr>
+              </thead> 
               <tbody id = "upcoming-event-list"></tbody>
             </table>
           </div>
         </div>
       </div>                
-      <!--div id = "past-event-list-holder" class="col-lg-12">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            Past Events 
-            <span class="glyphicon glyphicon-circle-arrow-down pull-right"></span>
-        </div>
-        <div class="panel-body hidden">
-          <table class="table table-striped"> 
-            <tbody id = "past-event-list"></tbody>
-          </table>
-        </div>
-      </div-->
       <div id = "deleted-event-list-holder" class="col-lg-12">
         <div class="panel panel-default">
           <div class="panel-heading">
           Upcoming Deleted Events <span class="glyphicon glyphicon-circle-arrow-down pull-right"></span>
           </div>
           <div class="panel-body hidden">
-            <table class="table table-striped"> 
+            <table class="table table-striped tablesorter">
+              <thead>
+                <tr class = "sortable">
+                  <th>Name&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
+                  <th>Date&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
+                </tr>
+              </thead>  
               <tbody id = "deleted-event-list"></tbody>
             </table>
           </div>
@@ -57,8 +57,8 @@
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title" id="myModalLabel">Event Edit Form</h4>
         </div>
-        <div class="modal-body">
-          <form class="form-horizontal" name="event_frm" id="event_frm" method="post" action="#">
+        <form name="event_frm" id="event_frm" method="post" action="#">
+          <div class="modal-body">
             <div class='form-group'>
               <label class = 'control-label' for = 'eventName'>Event Name*</label>
               <input class= 'form-control required' id = 'eventName' name = 'eventName' type = 'text' />
@@ -84,13 +84,12 @@
               <input class= 'form-control' id = 'eventPrice' name = 'eventPrice' type = 'text' />
             </div>
             <div class='form-group'>
-            <select name = "eventType" id = "eventType" class="form-control">
-            </select>
+              <select name = "eventType" id = "eventType" class="form-control"></select>
             </div>
             <input type = "hidden" name = "pkid" id = "pkid" value="0"/> 
-          </form>
-          <button id = "event_frm_submit" name = "event_frm_submit" class="btn btn-primary">Submit</button>
-        </div>
+            <button id = "event_frm_submit" name = "event_frm_submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

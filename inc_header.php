@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Ronkonkoma Chamber | Admin</title>
-      <link href="css/bootstrap.min.css" rel="stylesheet">
+      <link href="css/bootstrap.css" rel="stylesheet">
       <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
       <link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
       <link href="css/plugins/timeline/timeline.css" rel="stylesheet">
@@ -18,6 +18,7 @@
       <script src="js/plugins/morris/morris.js"></script>
       <script src="js/sb-admin.js"></script>
       <script src="js/demo/dashboard-demo.js"></script>
+      <script src="js/tablesorter-min.js"></script>
   </head>
   <body>
   <div id="wrapper">
@@ -48,7 +49,7 @@
               </a>
             </li>
           </ul>
-          <button type='button' id = 'admin_log_out' class='btn btn-primary btn-xs btn-block hidden'>Log Out</button>
+          <button type='button' id = 'admin_log_out' class='btn btn-primary btn-block hidden'>Log Out</button>
         </div>
       </div>
     </nav>

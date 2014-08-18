@@ -15,7 +15,12 @@
                   <span class="glyphicon glyphicon-circle-arrow-up pull-right"></span>
               </div>
               <div class="panel-body">
-                <table class="table table-striped"> 
+                <table class="table table-striped">
+                  <thead>
+                    <tr class = "sortable">
+                      <th>Name&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
+                    </tr>
+                  </thead> 
                   <tbody id = "pending-member-list"></tbody>
                 </table>
               </div>
@@ -27,7 +32,12 @@
                   Current Members <span class="glyphicon glyphicon-circle-arrow-down pull-right"></span>
               </div>
               <div class="panel-body hidden">
-                <table class="table table-striped"> 
+                <table class="table table-striped tablesorter">
+                  <thead>
+                    <tr class = "sortable">
+                      <th>Name&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
+                    </tr>
+                  </thead> 
                   <tbody id = "current-members-list"></tbody>
                 </table>
               </div>
@@ -36,10 +46,15 @@
           <div id = "suspended-member-list-holder" class="col-lg-12">
             <div class="panel panel-default">
               <div class="panel-heading">
-                  Suspended Members <span class="glyphicon glyphicon-circle-arrow-down pull-right"></span>
+                  Suspended Members<span class="glyphicon glyphicon-circle-arrow-down pull-right"></span>
               </div>
               <div class="panel-body hidden">
                 <table class="table table-striped"> 
+                  <thead>
+                    <tr class = "sortable">
+                      <th>Name&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
+                    </tr>
+                  </thead> 
                   <tbody id = "suspended-member-list"></tbody>
                 </table>
               </div>
@@ -194,6 +209,5 @@
         </div>
       </div>
     </div>
-
   </body>
 </html>

@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	$("html, body").animate({ scrollTop: 0 }, "slow");
 	drawMemberList("pending-member-list",1, "No Pending Members");
 	drawMemberList("current-members-list",2, "No Current Members");
 	drawMemberList("suspended-member-list",3, "No Suspended Members");
@@ -7,8 +8,15 @@ $(document).ready(function(){
 	drawRadioButtonGroupFromJSON("mbr-lvl-radio-box", "ajax/member_levels.asp", "memberLevel");
 	drawSelectorFromJSON("BusinessType", "ajax/business_cat.asp");
 	drawSelectorFromJSON("eventType", "ajax/get_event_type.asp");
-	
 	//drawEventList("deleted-event-list",3, "No Deleted Events");
+
+
+
+
+	$("sortable-headers .header").click(
+		$(this).toggleClass("","")
+	)
+
 	$(".panel-heading").click(function(){
 		$arrow = $(this).children("span");
 		$content = $(this).siblings(".panel-body");
@@ -16,10 +24,13 @@ $(document).ready(function(){
 		$content.toggleClass('hidden');
 	});
 	$("#add_new").click(function(){
+		$('#new_member_form .modal-title').html("New Member Form");
 		$("#new_member_frm input[type='text']").val("");
+		$("[name = 'memberState']").val("NY")
 		$('#new_member_form').modal();
 	});
 	$("#add_new_event").click(function(){
+		$('#event_frm_hldr .modal-title').html("New Event Form");
 		$("#event_frm input[type='text']").val("");
 		$("#event_frm_hldr").modal();
 	});
@@ -29,7 +40,6 @@ $(document).ready(function(){
 		if (!pkid){
 			pkid = 0;
 		}
-		console.log(pkid);
 		memberFormValid(pkid);
 	});	
 	$("#event_frm_submit").click(function(e){
@@ -78,15 +88,20 @@ function drawMemberList(container_id, task, emptymsg){
 		if ($.trim(addToTableStr) == ""){
 			$( "#"+container_id ).html(emptymsg);
 		}
+		console.log($( "#"+container_id ).parent()) 
 		$( "#"+container_id ).append(addToTableStr);
+		$( "#"+container_id ).parent().tablesorter();
 		$('[data-task]').on("click", function(e){
 			var task = $(this).attr('data-task');
 			var mbrID = $(this).attr('data-mbrID');
 			if (task == "edit"){
 				$.get("ajax/request_member_info.asp?memberid="+mbrID, function(data){
 					var member_info_obj = $.parseJSON(data);
+					$('#new_member_form .modal-title').html("Member Edit Form")
 					for (var field in member_info_obj[0]){
-						$("[name='"+field+"']").val(member_info_obj[0][field]);
+						if (field != "memberLevel"){
+							$("[name='"+field+"']").val(member_info_obj[0][field]);
+						}
 					}	
 					$('#new_member_form').modal();
 					$('#new_member_form').on('shown.bs.modal', function () {
@@ -121,9 +136,9 @@ function drawMemberList(container_id, task, emptymsg){
 function createMemberLine(memberName, memberID, task){
 	var memberLine = "";
 	if (task == 1){ /*pending*/
-		memberLine = "<tr><td>"+memberName+"</td><td><div class = 'btn-toolbar' role = 'toolbar'><div class = 'btn-group pull-right'></span></button><button class='btn btn-default btn-sm' data-task = 'unsuspend' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-play'></span></button><button class='btn btn-default btn-sm' data-task = 'delete' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-trash'></span></button></div></div></td></tr>";
+		memberLine = "<tr><td class='chamber-node' data-task = 'edit' data-mbrID = "+memberID+">"+memberName+"</td><td><div class = 'btn-toolbar' role = 'toolbar'><div class = 'btn-group pull-right'></span></button><button class='btn btn-default btn-sm' data-task = 'unsuspend' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-play'></span></button><button class='btn btn-default btn-sm' data-task = 'delete' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-trash'></span></button></div></div></td></tr>";
 	}else if (task >= 2){ /*current*/
-		memberLine = "<tr><td>"+memberName+"</td><td><div class = 'btn-toolbar' role = 'toolbar'><div class = 'btn-group pull-right'><button class='btn btn-default btn-sm' data-task = 'edit' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-pencil'></span></button><button class='btn btn-default btn-sm' data-task = 'suspend' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-pause'></span></button><button class='btn btn-default btn-sm' data-task = 'delete' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-trash'></span></button></div></div></td></tr>"; 
+		memberLine = "<tr><td class='chamber-node' data-task = 'edit' data-mbrID = "+memberID+">"+memberName+"</td><td><div class = 'btn-toolbar' role = 'toolbar'><div class = 'btn-group pull-right'><button class='btn btn-default btn-sm' data-task = 'edit' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-pencil'></span></button><button class='btn btn-default btn-sm' data-task = 'suspend' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-pause'></span></button><button class='btn btn-default btn-sm' data-task = 'delete' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-trash'></span></button></div></div></td></tr>"; 
 	}
 	return memberLine;
 }
@@ -188,9 +203,6 @@ function memberFormValid (memberID){
 	/*scroll to the top of the modal*/
 	}else {
 		$.post("ajax/member_join_form_submit.asp?pkid="+memberID, $("#new_member_frm").serialize())	
-			.fail(function(data){
-				console.log(data);
-			})
 			.success(function (data){
 				$("#new_member_frm_title").html("Success");
 				$("#new_member_frm_body").html(data);
@@ -200,8 +212,6 @@ function memberFormValid (memberID){
 				});
 			});
 	}
-
-	
 }
 function isBlank(name){
 	var is_blank = false;
@@ -212,27 +222,19 @@ function isBlank(name){
 	}
 	return is_blank;
 }
-
 function isValidEmailAddress(emailAddress) {
 	var pattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i;
 	return pattern.test(emailAddress);
 };
-
 function validatePhone(phoneNumber){
    var phoneNumberPattern = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;  
    return phoneNumberPattern.test(phoneNumber); 
 }
-
 function validateZip(zip){
     var zipRegex = /^\d{5}$/;
     return zipRegex.test(zip);
 }
-
-
 /* ...........................FUNCTION LIBRARY | Events Page.........................*/
-
-
-
 function drawEventList(container_id, task, msg){
 	$.get( "ajax/request_event_list.asp?task="+task, function( data ) {
 		var listHTML = "";
@@ -241,7 +243,9 @@ function drawEventList(container_id, task, msg){
 		for(var node in list) { 
     		memberobj = list[node];
 			var eventName = memberobj["eventName"]; 
-			var eventDate = memberobj["eventDate"]; 
+			var eventDate_i = memberobj["eventDate"];
+			var eventDate_array = eventDate_i.split(" ");
+			var eventDate = eventDate_array[0];
 			var eventID = memberobj["pkid"]; 	
   			addToTable.push(createEventLine(eventName, eventID, eventDate, task));
 		}
@@ -250,16 +254,17 @@ function drawEventList(container_id, task, msg){
 			$( "#"+container_id).html(msg);
 		}
 		$( "#"+container_id ).append(addToTableStr);
+		$( "#"+container_id ).parent().tablesorter();
 		$('[data-event-task]').on("click", function(e){
 			var task = $(this).attr('data-event-task');
 			var eventID = $(this).attr('data-eventID');
-			console.log (task, eventID);
 			if (task == "editEvent"){
 				$.get("ajax/request_event_info.asp?eventid="+eventID, function(data){
 					var event_info_obj = $.parseJSON(data);
 					for (var field in event_info_obj[0]){
 						$("[name='"+field+"']").val(event_info_obj[0][field]);
 					}
+					$('#event_frm_hldr .modal-title').html("Edit Event");
 					$('#event_frm_hldr').modal();
 				});
 			}else if (task == "deleteEvent"){
@@ -284,9 +289,9 @@ function drawEventList(container_id, task, msg){
 function createEventLine(eventName, eventID, eventDate, task){
 	var EventLine = "";	
 	if (task == 1){ /*upcoming*/
-		EventLine ="<tr><td>"+eventName+"</td><td>"+eventDate+"</td><td><div class = 'btn-toolbar pull-right' role = 'toolbar'><div class = 'btn-group'><button class='btn btn-default btn-sm' data-event-task = 'editEvent' data-eventID = '"+eventID+"' type='button'><span class='glyphicon glyphicon-pencil'></span></button></button><button class='btn btn-default btn-sm' data-event-task = 'deleteEvent' data-eventID = '"+eventID+"' type='button'><span class=' glyphicon glyphicon-trash'></span></button></div></div></td></tr>";
+		EventLine ="<tr><td class='chamber-node' data-event-task = 'editEvent' data-eventID = '"+eventID+"'>"+eventName+"</td><td>"+eventDate+"</td><td><div class = 'btn-toolbar pull-right' role = 'toolbar'><div class = 'btn-group'><button class='btn btn-default btn-sm' data-event-task = 'editEvent' data-eventID = '"+eventID+"' type='button'><span class='glyphicon glyphicon-pencil'></span></button></button><button class='btn btn-default btn-sm' data-event-task = 'deleteEvent' data-eventID = '"+eventID+"' type='button'><span class=' glyphicon glyphicon-trash'></span></button></div></div></td></tr>";
 	}else if (task == 2){ /*past*/
-		EventLine = "<tr><td>"+eventName+"</td><td>"+eventDate+"</td><td><div class = 'btn-toolbar pull-right' role = 'toolbar'><div class = 'btn-group'><button class='btn btn-default btn-sm' data-event-task = 'unDeleteEvent' data-eventID = '"+eventID+"' type='button'><span class='glyphicon glyphicon-play'></span></button></div></div></td></tr>";
+		EventLine = "<tr><td class='chamber-node' data-event-task = 'editEvent' data-eventID = '"+eventID+"'>"+eventName+"</td><td>"+eventDate+"</td><td><div class = 'btn-toolbar pull-right' role = 'toolbar'><div class = 'btn-group'><button class='btn btn-default btn-sm' data-event-task = 'unDeleteEvent' data-eventID = '"+eventID+"' type='button'><span class='glyphicon glyphicon-play'></span></button></div></div></td></tr>";
 	}
 	return EventLine;
 }
@@ -350,7 +355,6 @@ function eventFormValidate (pkid){
 	}
 
 	if (!hasError){
-		console.log(form_data);
 		$.post("ajax/event_info_submit.asp?pkid="+pkid, form_data, function(data){
 			$(".modal-header").html("Success");
 			$(".modal-body").html(data);
@@ -359,9 +363,6 @@ function eventFormValidate (pkid){
 				location.reload(true);
 			})
 		})
-		.always(function(data){
-			console.log(data);
-		});
 	}
 }
 
