@@ -87,7 +87,7 @@
             <select name = "eventType" id = "eventType" class="form-control">
             </select>
             </div>
-            <input type = "hidden" name = "pkid" id = "pkid"/> 
+            <input type = "hidden" name = "pkid" id = "pkid" value="0"/> 
           </form>
           <button id = "event_frm_submit" name = "event_frm_submit" class="btn btn-primary">Submit</button>
         </div>
@@ -102,7 +102,7 @@
           <h4 class="modal-title">Confirm</h4>
         </div>
         <div class="modal-body">
-        Are you sure you would like to delete this member? 
+        Are you sure you would like to delete this event? 
         </div>
         <div class = "modal-footer">
           <button id = "event_delete_yes" name = "event_delete_yes" class="btn btn-success">Yes</button>

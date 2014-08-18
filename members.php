@@ -134,7 +134,7 @@
                 <input class= 'form-control' id = 'Zip' name = 'memberZip' type = 'text' />
               </div>
               <div class='form-group'>
-                <label class = 'control-label' for = 'memberContactNum'>Tel*</label>
+                <label class = 'control-label' for = 'memberContactNum'>Tel</label>
                 <input class= 'form-control' id = 'Tel' name = 'memberContactNum' type = 'text' />
               </div>
               <div class='form-group'>
@@ -142,7 +142,7 @@
                 <input class= 'form-control' id = 'Fax' name = 'Fax' type = 'text' />
               </div>
               <div class='form-group'>
-                <label class = 'control-label' for = 'memberContactEmail'>eMail*</label>
+                <label class = 'control-label' for = 'memberContactEmail'>eMail</label>
                 <input class= 'form-control' id = 'eMail' name = 'memberContactEmail' type = 'text' />
               </div>
               <div class='form-group'>

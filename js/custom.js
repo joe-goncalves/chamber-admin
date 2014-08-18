@@ -174,20 +174,11 @@ function memberFormValid (memberID){
 	if (isBlank("memberContactName"))hasError = true;
 	if (isBlank("memberStreetAddress"))hasError = true;
 	if (isBlank("memberTown"))hasError = true;
-	if ( ! isValidEmailAddress($("[name='memberContactEmail']").val()) ){
-		$("[name='memberContactEmail']").parent().addClass("has-error");
-		hasError = true;
-	}
 	if ($("input[name = 'memberLevel']:checked").size()<1) {
 		$("#mbr-lvl-radio-box").addClass("has-error");
 		$("#mbr-lvl-radio-box").parent().addClass("has-error");
 		hasError = true;
 	}
-	if (!validatePhone($('#Tel').val())){
-		hasError=true;
-		$('#Tel').parent().addClass("has-error")
-	}
-
 	if(!validateZip($('#Zip').val())){
 		$('#Zip').parent().addClass("has-error");
 		hasError=true;		
@@ -267,7 +258,6 @@ function drawEventList(container_id, task, msg){
 				$.get("ajax/request_event_info.asp?eventid="+eventID, function(data){
 					var event_info_obj = $.parseJSON(data);
 					for (var field in event_info_obj[0]){
-						console.log(field, event_info_obj[0][field]);
 						$("[name='"+field+"']").val(event_info_obj[0][field]);
 					}
 					$('#event_frm_hldr').modal();
@@ -360,13 +350,17 @@ function eventFormValidate (pkid){
 	}
 
 	if (!hasError){
+		console.log(form_data);
 		$.post("ajax/event_info_submit.asp?pkid="+pkid, form_data, function(data){
 			$(".modal-header").html("Success");
 			$(".modal-body").html(data);
 			$(".modal-body").parent().append('<div class="modal-footer"><button id = "event_action_done" type = "button" class = "btn btn-success btn-block">OK</button></div>');
 			$("#event_action_done").bind("click", function(){
 				location.reload(true);
-			});
+			})
+		})
+		.always(function(data){
+			console.log(data);
 		});
 	}
 }
