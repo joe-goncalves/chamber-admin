@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">
-                  <button id = "add_new" type = "button" class = "btn btn-success">New Member</button>
+                  <button id = "add_new" type = "button" class = "btn btn-success"><span class="glyphicon glyphicon glyphicon-plus"></span>&nbsp;New Member</button>
                 </h1>
             </div>
         </div>
@@ -29,7 +29,7 @@
           <div id = "current-member-list-holder" class="col-lg-12">
             <div class="panel panel-default">
               <div class="panel-heading">
-                  Current Members <span class="glyphicon glyphicon-circle-arrow-down pull-right"></span>
+                  Current Members&nbsp;<span class="glyphicon glyphicon-circle-arrow-down pull-right"></span>
               </div>
               <div class="panel-body hidden">
                 <table class="table table-striped tablesorter">

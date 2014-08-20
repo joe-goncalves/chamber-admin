@@ -332,6 +332,18 @@ table.dataTable thead .sorting:after {
 .sortable-headers .header{
     border: none !important;
 }
-.chamber-node{
+.chamber-node, th.header{
     cursor:pointer;
+}
+
+.table.table-striped.tablesorter td {
+    text-align: right
+    width:25%;
+}
+table.table-striped.tablesorter td.chamber-node{
+    text-align: left;
+    width:50%;
+}
+#admin_log_out{
+    border-radius: 0;
 }
