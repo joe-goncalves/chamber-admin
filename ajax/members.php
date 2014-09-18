@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">
-                  <button id = "add_new" type = "button" class = "btn btn-success"><span class="glyphicon glyphicon glyphicon-plus"></span>&nbsp;New Member</button>
+                  <button id = "add_new" type = "button" class = "btn btn-success">New Member</button>
                 </h1>
             </div>
         </div>
@@ -15,58 +15,33 @@
                   <span class="glyphicon glyphicon-circle-arrow-up pull-right"></span>
               </div>
               <div class="panel-body">
-                <table class="table table-striped">
-                  <thead>
-                    <tr class = "sortable">
-                      <th>Name&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
-                    </tr>
-                  </thead> 
+                <table class="table table-striped"> 
                   <tbody id = "pending-member-list"></tbody>
                 </table>
-                <div class="col-md-12 text-center">
-                  <ul class="pagination pagination-lg pager" id="pending-member-list-pager"></ul>
-                </div>
               </div>
             </div>
-            
           </div>            
           <div id = "current-member-list-holder" class="col-lg-12">
             <div class="panel panel-default">
               <div class="panel-heading">
-                  Current Members&nbsp;<span class="glyphicon glyphicon-circle-arrow-down pull-right"></span>
+                  Current Members <span class="glyphicon glyphicon-circle-arrow-down pull-right"></span>
               </div>
               <div class="panel-body hidden">
-                <table class="table table-striped tablesorter">
-                  <thead>
-                    <tr class = "sortable">
-                      <th>Name&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
-                    </tr>
-                  </thead> 
+                <table class="table table-striped"> 
                   <tbody id = "current-members-list"></tbody>
                 </table>
-                <div class="col-md-12 text-center hidden">
-                  <ul class="pagination pagination-lg pager" id="current-members-list-pager"></ul>
-                </div>
               </div>
             </div>
           </div>
           <div id = "suspended-member-list-holder" class="col-lg-12">
             <div class="panel panel-default">
               <div class="panel-heading">
-                  Suspended Members<span class="glyphicon glyphicon-circle-arrow-down pull-right"></span>
+                  Suspended Members <span class="glyphicon glyphicon-circle-arrow-down pull-right"></span>
               </div>
               <div class="panel-body hidden">
                 <table class="table table-striped"> 
-                  <thead>
-                    <tr class = "sortable">
-                      <th>Name&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
-                    </tr>
-                  </thead> 
                   <tbody id = "suspended-member-list"></tbody>
                 </table>
-                <div class="col-md-12 text-center hidden">
-                  <ul class="pagination pagination-lg pager" id="suspended-member-list-pager"></ul>
-                </div>
               </div>
             </div>
           </div>
@@ -219,5 +194,6 @@
         </div>
       </div>
     </div>
+
   </body>
 </html>

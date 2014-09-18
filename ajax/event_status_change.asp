@@ -15,5 +15,6 @@ if task = "unDeleteEvent" then
 	isActive = 1 
 end if
 query = "UPDATE event SET active = "&isActive&" WHERE pkid = " + eventid
+response.write(query)
 call updateDatabase(query, rsTemp, "") 
 %>

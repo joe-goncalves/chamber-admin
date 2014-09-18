@@ -67,17 +67,18 @@
               <label class = 'control-label' for = 'eventDesc'>Event Description*</label>
               <input class= 'form-control required' id = 'eventDesc' name = 'eventDesc' type = 'text' />
             </div>
-            <div class='form-group'>
-              <label class = 'control-label' for = 'eventDate'>Event Date(mm/dd/yyyy)*</label>
-              <input class= 'form-control required' id = 'eventDate' name = 'eventDate' type = 'text' />
+            <div class="form-group">
+                <label class = 'control-label' for = 'eventDesc'>Event Date*</label>
+                <div class='input-group date' id='eventDateTime'>
+                    <input type='text' class="form-control" name='eventDateTime'/>
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
             </div>
             <div class='form-group'>
               <label class = 'control-label' for = 'eventLoc'>Event Location*</label>
               <input class= 'form-control required' id = 'eventLoc' name = 'eventLoc' type = 'text' />
-            </div>
-            <div class='form-group'>
-              <label class = 'control-label' for = 'eventTime'>Event Time*</label>
-              <input class= 'form-control required' id = 'eventTime' name = 'eventTime' type = 'text' />
             </div>
             <div class='form-group'>
               <label class = 'control-label' for = 'eventPrice'>Event Price</label>

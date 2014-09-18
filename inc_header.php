@@ -5,6 +5,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Ronkonkoma Chamber | Admin</title>
       <link href="css/bootstrap.css" rel="stylesheet">
+      <link href="css/bootstrap-datetimepicker.css" rel="stylesheet">
       <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
       <link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
       <link href="css/plugins/timeline/timeline.css" rel="stylesheet">
@@ -19,6 +20,9 @@
       <script src="js/sb-admin.js"></script>
       <script src="js/demo/dashboard-demo.js"></script>
       <script src="js/tablesorter-min.js"></script>
+      <script src="js/moment.js"></script>
+      <script src="js/bootstrap-datetimepicker.min.js"></script>
+      
   </head>
   <body>
   <div id="wrapper">
@@ -46,6 +50,12 @@
               <a href="members.php">
                 <span class="glyphicon glyphicon-user"></span> 
                 Members
+              </a>
+            </li>
+             <li>
+              <a href="emergency.php">
+                <span class="glyphicon glyphicon-exclamation-sign"></span> 
+                Emergency Service Request
               </a>
             </li>
           </ul>

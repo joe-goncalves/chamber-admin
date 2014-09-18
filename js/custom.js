@@ -1,8 +1,157 @@
+$.fn.pageMe = function(opts){
+var $this = this,
+    defaults = {
+        perPage: 7,
+        showPrevNext: true,
+        numbersPerPage: 12,
+        hidePageNumbers: false,
+        showFirstLast: false
+    },
+    settings = $.extend(defaults, opts); //overwrites default values with thouse that were passed in.
+console.log ($this);
+var listElement = $this;
+var perPage = settings.perPage; 
+var children = listElement.children();
+var pager = $('.pagination');
+
+if (typeof settings.childSelector!="undefined") {
+    children = listElement.find(settings.childSelector);
+}
+
+if (typeof settings.pagerSelector!="undefined") {
+    pager = $(settings.pagerSelector);
+}
+
+var numItems = children.size();
+var numPages = Math.ceil(numItems/perPage);
+
+pager.data("curr",0);
+
+if (settings.showFirstLast){
+    $('<li><a href="#" class="first_link">&lt;</a></li>').appendTo(pager);
+}     
+if (settings.showPrevNext){
+    $('<li><a href="#" class="prev_link">«</a></li>').appendTo(pager);
+}
+
+var curr = 0;
+while(numPages > curr && (settings.hidePageNumbers==false)){
+    $('<li><a href="#" class="page_link">'+(curr+1)+'</a></li>').appendTo(pager);
+    curr++;
+}
+
+if (settings.numbersPerPage>1) {
+   $('.page_link').hide();
+   $('.page_link').slice(pager.data("curr"), settings.numbersPerPage).show();
+}
+
+if (settings.showPrevNext){
+    $('<li><a href="#" class="next_link">»</a></li>').appendTo(pager);
+}
+if (settings.showFirstLast){
+    $('<li><a href="#" class="last_link">&gt;</a></li>').appendTo(pager);
+}  
+
+pager.find('.page_link:first').addClass('active');
+pager.find('.prev_link').hide();
+if (numPages<=1) {
+    pager.find('.next_link').hide();
+}
+pager.children().eq(2).addClass("active");
+
+children.hide();
+children.slice(0, perPage).show();
+
+pager.find('li .page_link').click(function(){
+    var clickedPage = $(this).html().valueOf()-1;
+    goTo(clickedPage,perPage);
+    return false;
+});
+pager.find('li .first_link').click(function(){
+    first();
+    return false;
+});  
+
+pager.find('li .prev_link').click(function(){
+    previous();
+    return false;
+});
+pager.find('li .next_link').click(function(){
+    next();
+    return false;
+});
+pager.find('li .last_link').click(function(){
+    last();
+    return false;
+});    
+function previous(){
+    var goToPage = parseInt(pager.data("curr")) - 1;
+    goTo(goToPage);
+}
+
+function next(){
+    goToPage = parseInt(pager.data("curr")) + 1;
+    goTo(goToPage);
+}
+
+function first(){
+    var goToPage = 0;
+    goTo(goToPage);
+} 
+
+function last(){
+    var goToPage = numPages-1;
+    goTo(goToPage);
+} 
+
+function goTo(page){
+    var startAt = page * perPage,
+        endOn = startAt + perPage;
+
+    children.css('display','none').slice(startAt, endOn).show();
+
+    if (page>=1) {
+        pager.find('.prev_link').show();
+    }
+    else {
+        pager.find('.prev_link').hide();
+    }
+
+if (page < (numPages - settings.numbersPerPage)) {
+        pager.find('.next_link').show();
+    }
+    else {
+        pager.find('.next_link').hide();
+    }
+
+    pager.data("curr",page);
+
+if (settings.numbersPerPage > 1) {
+    $('.page_link').hide();
+
+    if (page < (numPages - settings.numbersPerPage)) {
+        $('.page_link').slice(page, settings.numbersPerPage + page).show();
+    }
+    else {
+        $('.page_link').slice(numPages-settings.numbersPerPage).show();
+    }
+}
+
+    pager.children().removeClass("active");
+    pager.children().eq(page+2).addClass("active");
+
+}
+};
+
+
+
+
+
 $(document).ready(function(){
 	$("html, body").animate({ scrollTop: 0 }, "slow");
-	drawMemberList("pending-member-list",1, "No Pending Members");
-	drawMemberList("current-members-list",2, "No Current Members");
-	drawMemberList("suspended-member-list",3, "No Suspended Members");
+	drawMemberList("pending-member-list",1, "No Pending Members"); //not active, not suspended
+	drawMemberList("current-members-list",2, "No Current Members"); //active, not suspended
+	drawMemberList("suspended-member-list",3, "No Suspended Members"); //not active, suspended
 	drawEventList("upcoming-event-list",1, "No Upcoming Event");
 	drawEventList("deleted-event-list",2, "No Upcoming Deleted Event");
 	drawRadioButtonGroupFromJSON("mbr-lvl-radio-box", "ajax/member_levels.asp", "memberLevel");
@@ -10,8 +159,53 @@ $(document).ready(function(){
 	drawSelectorFromJSON("eventType", "ajax/get_event_type.asp");
 	//drawEventList("deleted-event-list",3, "No Deleted Events");
 
+	//remove the error class on modal show
+	$("#event_frm_hldr, #new_member_form").on('show.bs.modal', function (){
+    	$(".form-group").removeClass("has-error");
+	});
+
+	$('#eventDateTime').datetimepicker();
 
 
+    $("#rqst_sbmt").click(function(e){
+      e.preventDefault();
+      $(".has-error").removeClass("has-error");
+      var email_valid = 0;
+      var error = false;
+      var cbx_error = false;
+      var data =  $("#rqst_frm").serialize();
+      email_valid = isValidEmailAddress($("#rqstr_eml").val());
+      message_valid = isBlank($("#rqst_txt").val());
+      name_valid = isBlank($("#rqstr_nm").val());
+      if(!email_valid){
+        error = true;
+        $("#rqstr_eml").parent().addClass("has-error");
+      } 
+      if(!message_valid){
+        error = true;
+        $("#rqst_txt").parent().addClass("has-error");
+      }
+      if(!name_valid){
+        error = true;
+        $("#rqstr_nm").parent().addClass("has-error");
+      }
+      if($("#accept_pay:checked").size() != 1){
+        cbx_error = true;
+      }
+      if (error){$('#generic_error').modal({keyboard: false});}
+      else if (cbx_error){$('#cbx_err').modal({keyboard: false});}
+      else if (!error&&!cbx_error){
+        $.ajax({
+          type: "post",
+          url: "ajax/emergency_request_process.asp",
+          data: data, 
+          success:  function(data){
+            $('#tx_mdl').modal({keyboard: false});
+          }
+        }) 
+      }
+    });
+      
 
 	$("sortable-headers .header").click(
 		$(this).toggleClass("","")
@@ -22,6 +216,8 @@ $(document).ready(function(){
 		$content = $(this).siblings(".panel-body");
 		$arrow.toggleClass("glyphicon-circle-arrow-down").toggleClass("glyphicon-circle-arrow-up");
 		$content.toggleClass('hidden');
+		$content.children(".col-md-12.text-center").toggleClass('hidden');
+
 	});
 	$("#add_new").click(function(){
 		$('#new_member_form .modal-title').html("New Member Form");
@@ -48,27 +244,10 @@ $(document).ready(function(){
 		if (!pkid){
 			pkid = 0;
 		}
+		console.log($('[name="eventDateTime"]').val());
+		console.log($('[name="eventDateTime"]').val().length);
 		eventFormValidate(pkid);
 	})
-	$("#login").click(function(e){
-		e.preventDefault();
-		data = $("#login_form").serialize();
-		$.post("ajax/check_login.php", data,  function(data){
-			data_obj = $.parseJSON(data);
-			if (data_obj.username_valid == false){
-				var msg = "Your Username or Password are incorrect";
-			}else if(data_obj.password_valid == false){
-				var msg = "Your Password does not match your Username";
-			}
-			if (msg){
-				$("#login_error").html(msg).removeClass('hidden');
-			}else{
-				$("#login_error").addClass('hidden');
-				document.cookie="ronkChamberAdmin=" + $("[name ='user_name']").val();
-				window.location.replace("members.php");
-			}
-		});
-	});
 });
 
 /* ...........................FUNCTION LIBRARY | Members Page.........................*/
@@ -88,8 +267,8 @@ function drawMemberList(container_id, task, emptymsg){
 		if ($.trim(addToTableStr) == ""){
 			$( "#"+container_id ).html(emptymsg);
 		}
-		console.log($( "#"+container_id ).parent()) 
 		$( "#"+container_id ).append(addToTableStr);
+		$( "#"+container_id ).pageMe({pagerSelector:"#"+container_id +'-pager'});
 		$( "#"+container_id ).parent().tablesorter();
 		$('[data-task]').on("click", function(e){
 			var task = $(this).attr('data-task');
@@ -137,8 +316,10 @@ function createMemberLine(memberName, memberID, task){
 	var memberLine = "";
 	if (task == 1){ /*pending*/
 		memberLine = "<tr><td class='chamber-node' data-task = 'edit' data-mbrID = "+memberID+">"+memberName+"</td><td><div class = 'btn-toolbar' role = 'toolbar'><div class = 'btn-group pull-right'></span></button><button class='btn btn-default btn-sm' data-task = 'unsuspend' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-play'></span></button><button class='btn btn-default btn-sm' data-task = 'delete' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-trash'></span></button></div></div></td></tr>";
-	}else if (task >= 2){ /*current*/
+	}else if (task == 2){ /*current*/
 		memberLine = "<tr><td class='chamber-node' data-task = 'edit' data-mbrID = "+memberID+">"+memberName+"</td><td><div class = 'btn-toolbar' role = 'toolbar'><div class = 'btn-group pull-right'><button class='btn btn-default btn-sm' data-task = 'edit' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-pencil'></span></button><button class='btn btn-default btn-sm' data-task = 'suspend' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-pause'></span></button><button class='btn btn-default btn-sm' data-task = 'delete' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-trash'></span></button></div></div></td></tr>"; 
+	}else if (task == 3){ /*suspended*/
+		memberLine = "<tr><td class='chamber-node' data-task = 'edit' data-mbrID = "+memberID+">"+memberName+"</td><td><div class = 'btn-toolbar' role = 'toolbar'><div class = 'btn-group pull-right'><button class='btn btn-default btn-sm' data-task = 'edit' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-pencil'></span></button><button class='btn btn-default btn-sm' data-task = 'unsuspend' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-play'></span></button><button class='btn btn-default btn-sm' data-task = 'delete' data-mbrID = "+memberID+" type='button'><span class='glyphicon glyphicon-trash'></span></button></div></div></td></tr>"; 
 	}
 	return memberLine;
 }
@@ -243,9 +424,7 @@ function drawEventList(container_id, task, msg){
 		for(var node in list) { 
     		memberobj = list[node];
 			var eventName = memberobj["eventName"]; 
-			var eventDate_i = memberobj["eventDate"];
-			var eventDate_array = eventDate_i.split(" ");
-			var eventDate = eventDate_array[0];
+			var eventDate = memberobj["eventDate"];
 			var eventID = memberobj["pkid"]; 	
   			addToTable.push(createEventLine(eventName, eventID, eventDate, task));
 		}
@@ -261,9 +440,14 @@ function drawEventList(container_id, task, msg){
 			if (task == "editEvent"){
 				$.get("ajax/request_event_info.asp?eventid="+eventID, function(data){
 					var event_info_obj = $.parseJSON(data);
+					var eventDateTime = new Array();
 					for (var field in event_info_obj[0]){
+						if (field == "eventDate" || field == "eventTime"){
+							eventDateTime.push(event_info_obj[0][field]);
+						}
 						$("[name='"+field+"']").val(event_info_obj[0][field]);
 					}
+					$("[name='eventDateTime']").val(eventDateTime.join(" "));
 					$('#event_frm_hldr .modal-title').html("Edit Event");
 					$('#event_frm_hldr').modal();
 				});
@@ -345,13 +529,15 @@ function eventFormValidate (pkid){
 	var form_data = ($("#event_frm").serialize());
 	var hasError = false
 	$("#event_frm input.required").each(function(){
-		if (isBlank($(this).attr("name"))){
+		if ($(this).val().length==0){
+			console.log($(this).attr("name"));
 			hasError=true;
+			$(this).parent().addClass("has-error");
 		}
 	});
-	if(!isDate($("#eventDate").val())){
+	if($("[name='eventDateTime']").val().length==0){
 		hasError=true;
-		$("#eventDate").parent().addClass("has-error");
+		$("#eventDateTime").parent().addClass("has-error");
 	}
 
 	if (!hasError){
@@ -363,6 +549,9 @@ function eventFormValidate (pkid){
 				location.reload(true);
 			})
 		})
+		.always (function(data){
+					console.log(data.responseText);
+				});
 	}
 }
 
@@ -400,5 +589,14 @@ function isDate(txtDate)
   return true;
 }
 
+function isValidEmailAddress(emailAddress) {
+        var pattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i;
+        return pattern.test(emailAddress);
+      };
+function isBlank(val) {
+	var err = false;
+	if ($.trim(val) != "") err = true;
+	return err;
+}
 
 
