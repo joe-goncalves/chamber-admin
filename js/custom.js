@@ -1,152 +1,3 @@
-$.fn.pageMe = function(opts){
-var $this = this,
-    defaults = {
-        perPage: 7,
-        showPrevNext: true,
-        numbersPerPage: 12,
-        hidePageNumbers: false,
-        showFirstLast: false
-    },
-    settings = $.extend(defaults, opts); //overwrites default values with thouse that were passed in.
-console.log ($this);
-var listElement = $this;
-var perPage = settings.perPage; 
-var children = listElement.children();
-var pager = $('.pagination');
-
-if (typeof settings.childSelector!="undefined") {
-    children = listElement.find(settings.childSelector);
-}
-
-if (typeof settings.pagerSelector!="undefined") {
-    pager = $(settings.pagerSelector);
-}
-
-var numItems = children.size();
-var numPages = Math.ceil(numItems/perPage);
-
-pager.data("curr",0);
-
-if (settings.showFirstLast){
-    $('<li><a href="#" class="first_link">&lt;</a></li>').appendTo(pager);
-}     
-if (settings.showPrevNext){
-    $('<li><a href="#" class="prev_link">«</a></li>').appendTo(pager);
-}
-
-var curr = 0;
-while(numPages > curr && (settings.hidePageNumbers==false)){
-    $('<li><a href="#" class="page_link">'+(curr+1)+'</a></li>').appendTo(pager);
-    curr++;
-}
-
-if (settings.numbersPerPage>1) {
-   $('.page_link').hide();
-   $('.page_link').slice(pager.data("curr"), settings.numbersPerPage).show();
-}
-
-if (settings.showPrevNext){
-    $('<li><a href="#" class="next_link">»</a></li>').appendTo(pager);
-}
-if (settings.showFirstLast){
-    $('<li><a href="#" class="last_link">&gt;</a></li>').appendTo(pager);
-}  
-
-pager.find('.page_link:first').addClass('active');
-pager.find('.prev_link').hide();
-if (numPages<=1) {
-    pager.find('.next_link').hide();
-}
-pager.children().eq(2).addClass("active");
-
-children.hide();
-children.slice(0, perPage).show();
-
-pager.find('li .page_link').click(function(){
-    var clickedPage = $(this).html().valueOf()-1;
-    goTo(clickedPage,perPage);
-    return false;
-});
-pager.find('li .first_link').click(function(){
-    first();
-    return false;
-});  
-
-pager.find('li .prev_link').click(function(){
-    previous();
-    return false;
-});
-pager.find('li .next_link').click(function(){
-    next();
-    return false;
-});
-pager.find('li .last_link').click(function(){
-    last();
-    return false;
-});    
-function previous(){
-    var goToPage = parseInt(pager.data("curr")) - 1;
-    goTo(goToPage);
-}
-
-function next(){
-    goToPage = parseInt(pager.data("curr")) + 1;
-    goTo(goToPage);
-}
-
-function first(){
-    var goToPage = 0;
-    goTo(goToPage);
-} 
-
-function last(){
-    var goToPage = numPages-1;
-    goTo(goToPage);
-} 
-
-function goTo(page){
-    var startAt = page * perPage,
-        endOn = startAt + perPage;
-
-    children.css('display','none').slice(startAt, endOn).show();
-
-    if (page>=1) {
-        pager.find('.prev_link').show();
-    }
-    else {
-        pager.find('.prev_link').hide();
-    }
-
-if (page < (numPages - settings.numbersPerPage)) {
-        pager.find('.next_link').show();
-    }
-    else {
-        pager.find('.next_link').hide();
-    }
-
-    pager.data("curr",page);
-
-if (settings.numbersPerPage > 1) {
-    $('.page_link').hide();
-
-    if (page < (numPages - settings.numbersPerPage)) {
-        $('.page_link').slice(page, settings.numbersPerPage + page).show();
-    }
-    else {
-        $('.page_link').slice(numPages-settings.numbersPerPage).show();
-    }
-}
-
-    pager.children().removeClass("active");
-    pager.children().eq(page+2).addClass("active");
-
-}
-};
-
-
-
-
-
 $(document).ready(function(){
 	$("html, body").animate({ scrollTop: 0 }, "slow");
 	drawMemberList("pending-member-list",1, "No Pending Members"); //not active, not suspended
@@ -158,15 +9,11 @@ $(document).ready(function(){
 	drawSelectorFromJSON("BusinessType", "ajax/business_cat.asp");
 	drawSelectorFromJSON("eventType", "ajax/get_event_type.asp");
 	//drawEventList("deleted-event-list",3, "No Deleted Events");
-
 	//remove the error class on modal show
 	$("#event_frm_hldr, #new_member_form").on('show.bs.modal', function (){
     	$(".form-group").removeClass("has-error");
 	});
-
 	$('#eventDateTime').datetimepicker();
-
-
     $("#rqst_sbmt").click(function(e){
       e.preventDefault();
       $(".has-error").removeClass("has-error");
@@ -268,8 +115,9 @@ function drawMemberList(container_id, task, emptymsg){
 			$( "#"+container_id ).html(emptymsg);
 		}
 		$( "#"+container_id ).append(addToTableStr);
-		$( "#"+container_id ).pageMe({pagerSelector:"#"+container_id +'-pager'});
-		$( "#"+container_id ).parent().tablesorter();
+		$( "#"+container_id ).parent().DataTable();
+
+		
 		$('[data-task]').on("click", function(e){
 			var task = $(this).attr('data-task');
 			var mbrID = $(this).attr('data-mbrID');
@@ -366,10 +214,18 @@ function getMemberInfo(field, value){
 function memberFormValid (memberID){
 	$(".has-error").removeClass("has-error");
 	var hasError = false;
-	if (isBlank("memberName"))hasError = true;
-	if (isBlank("memberContactName"))hasError = true;
-	if (isBlank("memberStreetAddress"))hasError = true;
-	if (isBlank("memberTown"))hasError = true;
+	if (hasVal('memberContactName')==false){
+		hasError = true;
+	} 
+	if (hasVal('memberStreetAddress')==false){
+		hasError = true;
+	} 
+	if (hasVal("memberTown")==false){
+		hasError = true;
+	}
+	if (hasVal("memberName")==false){
+		hasError = true;
+	}
 	if ($("input[name = 'memberLevel']:checked").size()<1) {
 		$("#mbr-lvl-radio-box").addClass("has-error");
 		$("#mbr-lvl-radio-box").parent().addClass("has-error");
@@ -379,11 +235,11 @@ function memberFormValid (memberID){
 		$('#Zip').parent().addClass("has-error");
 		hasError=true;		
 	}
-
-	if(hasError){
-	/*scroll to the top of the modal*/
-	}else {
+	if(!hasError){
 		$.post("ajax/member_join_form_submit.asp?pkid="+memberID, $("#new_member_frm").serialize())	
+			.always(function (data){
+				console.log(data);
+			})
 			.success(function (data){
 				$("#new_member_frm_title").html("Success");
 				$("#new_member_frm_body").html(data);
@@ -392,17 +248,10 @@ function memberFormValid (memberID){
 					location.reload(true);
 				});
 			});
+
 	}
 }
-function isBlank(name){
-	var is_blank = false;
-	var curval = $.trim(  $("[name = '"+name+"']").val()  );
-	if (!curval || curval == ""){
-		is_blank = true;
-		$("[name = '"+name+"']").parent().addClass("has-error");
-	}
-	return is_blank;
-}
+
 function isValidEmailAddress(emailAddress) {
 	var pattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i;
 	return pattern.test(emailAddress);
@@ -414,6 +263,16 @@ function validatePhone(phoneNumber){
 function validateZip(zip){
     var zipRegex = /^\d{5}$/;
     return zipRegex.test(zip);
+}
+function hasVal(input){
+	var hasVal = true;
+	var curval = $.trim($("[name = '"+input+"']").val());
+	console.log(curval);
+	if (curval == ""){
+		hasVal = false;
+		$("[name = '"+input+"']").parent().addClass("has-error");
+	}
+	return hasVal;
 }
 /* ...........................FUNCTION LIBRARY | Events Page.........................*/
 function drawEventList(container_id, task, msg){
@@ -433,7 +292,8 @@ function drawEventList(container_id, task, msg){
 			$( "#"+container_id).html(msg);
 		}
 		$( "#"+container_id ).append(addToTableStr);
-		$( "#"+container_id ).parent().tablesorter();
+		//$( "#"+container_id ).parent().tablesorter();
+		$( "#"+container_id ).parent().DataTable();
 		$('[data-event-task]').on("click", function(e){
 			var task = $(this).attr('data-event-task');
 			var eventID = $(this).attr('data-eventID');
@@ -473,9 +333,9 @@ function drawEventList(container_id, task, msg){
 function createEventLine(eventName, eventID, eventDate, task){
 	var EventLine = "";	
 	if (task == 1){ /*upcoming*/
-		EventLine ="<tr><td class='chamber-node' data-event-task = 'editEvent' data-eventID = '"+eventID+"'>"+eventName+"</td><td>"+eventDate+"</td><td><div class = 'btn-toolbar pull-right' role = 'toolbar'><div class = 'btn-group'><button class='btn btn-default btn-sm' data-event-task = 'editEvent' data-eventID = '"+eventID+"' type='button'><span class='glyphicon glyphicon-pencil'></span></button></button><button class='btn btn-default btn-sm' data-event-task = 'deleteEvent' data-eventID = '"+eventID+"' type='button'><span class=' glyphicon glyphicon-trash'></span></button></div></div></td></tr>";
+		EventLine ="<tr><td>"+eventDate+"</td><td class='chamber-node' data-event-task = 'editEvent' data-eventID = '"+eventID+"'>"+eventName+"</td><td><div class = 'btn-toolbar pull-right' role = 'toolbar'><div class = 'btn-group'><button class='btn btn-default btn-sm' data-event-task = 'editEvent' data-eventID = '"+eventID+"' type='button'><span class='glyphicon glyphicon-pencil'></span></button></button><button class='btn btn-default btn-sm' data-event-task = 'deleteEvent' data-eventID = '"+eventID+"' type='button'><span class=' glyphicon glyphicon-trash'></span></button></div></div></td></tr>";
 	}else if (task == 2){ /*past*/
-		EventLine = "<tr><td class='chamber-node' data-event-task = 'editEvent' data-eventID = '"+eventID+"'>"+eventName+"</td><td>"+eventDate+"</td><td><div class = 'btn-toolbar pull-right' role = 'toolbar'><div class = 'btn-group'><button class='btn btn-default btn-sm' data-event-task = 'unDeleteEvent' data-eventID = '"+eventID+"' type='button'><span class='glyphicon glyphicon-play'></span></button></div></div></td></tr>";
+		EventLine = "<tr><td>"+eventDate+"</td><td class='chamber-node' data-event-task = 'editEvent' data-eventID = '"+eventID+"'>"+eventName+"</td><td><div class = 'btn-toolbar pull-right' role = 'toolbar'><div class = 'btn-group'><button class='btn btn-default btn-sm' data-event-task = 'unDeleteEvent' data-eventID = '"+eventID+"' type='button'><span class='glyphicon glyphicon-play'></span></button></div></div></td></tr>";
 	}
 	return EventLine;
 }

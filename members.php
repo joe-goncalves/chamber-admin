@@ -18,7 +18,7 @@
                 <table class="table table-striped">
                   <thead>
                     <tr class = "sortable">
-                      <th>Name&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
+                      <th>Name</th>
                     </tr>
                   </thead> 
                   <tbody id = "pending-member-list"></tbody>
@@ -39,7 +39,7 @@
                 <table class="table table-striped tablesorter">
                   <thead>
                     <tr class = "sortable">
-                      <th>Name&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
+                      <th>Name&nbsp;</span></th>
                     </tr>
                   </thead> 
                   <tbody id = "current-members-list"></tbody>
@@ -59,7 +59,7 @@
                 <table class="table table-striped"> 
                   <thead>
                     <tr class = "sortable">
-                      <th>Name&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
+                      <th>Name&nbsp;</th>
                     </tr>
                   </thead> 
                   <tbody id = "suspended-member-list"></tbody>

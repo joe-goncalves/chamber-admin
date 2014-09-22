@@ -21,8 +21,8 @@
             <table class="table table-striped tablesorter">
               <thead>
                 <tr class = "sortable">
-                  <th>Name&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
-                  <th>Date&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
+                  <th>Date&nbsp;</th>
+                  <th>Name&nbsp;</th>
                 </tr>
               </thead> 
               <tbody id = "upcoming-event-list"></tbody>
@@ -39,8 +39,8 @@
             <table class="table table-striped tablesorter">
               <thead>
                 <tr class = "sortable">
-                  <th>Name&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
-                  <th>Date&nbsp;<span class = "glyphicon glyphicon-sort"></span></th>
+                  <th>Date&nbsp;</th>
+                  <th>Name&nbsp;</th>
                 </tr>
               </thead>  
               <tbody id = "deleted-event-list"></tbody>

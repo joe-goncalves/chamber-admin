@@ -22,6 +22,9 @@
       <script src="js/tablesorter-min.js"></script>
       <script src="js/moment.js"></script>
       <script src="js/bootstrap-datetimepicker.min.js"></script>
+      <link rel="stylesheet" type="text/css" href="js/DataTables-1.10.2/media/css/jquery.dataTables.css">
+      <script type="text/javascript" charset="utf8" src="js/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
+
       
   </head>
   <body>
